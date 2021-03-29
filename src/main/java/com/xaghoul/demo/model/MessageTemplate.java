@@ -1,5 +1,6 @@
 package com.xaghoul.demo.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,11 +13,13 @@ import java.util.UUID;
 @Entity
 @Data
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class MessageTemplate {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "UUID",
+                    strategy = GenerationType.IDENTITY)
     UUID id;
     String name;
     String substitutionValue;
