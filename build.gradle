@@ -24,6 +24,9 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.4.4'
+    implementation group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '1.2.5'
 }
 
 test {
