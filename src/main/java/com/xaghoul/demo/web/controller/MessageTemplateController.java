@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.UUID;
 
 @RestController
@@ -28,7 +28,7 @@ public class MessageTemplateController {
         return service.getById(templateId);
     }
 
-    @GetMapping("/")
+    @GetMapping({"/", ""})
     public CollectionModel<EntityModel<MessageTemplate>> getAll() {
         return service.getAll();
     }
@@ -41,9 +41,9 @@ public class MessageTemplateController {
 
     @PostMapping("/send_message")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> sendMessage(String templateName, String ... vars) {
+    public ResponseEntity<?> sendMessage(@RequestBody String templateName, ArrayList<String> vars) {
         MessageTemplate messageTemplate = service.getByName(templateName);
-        return new ResponseEntity<>(messageTemplate.createMessage(Arrays.asList(vars)), HttpStatus.OK);
+        return new ResponseEntity<>(messageTemplate.createMessage(vars), HttpStatus.OK);
     }
 
     @PutMapping("/{templateId}")
