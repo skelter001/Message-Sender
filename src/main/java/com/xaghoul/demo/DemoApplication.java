@@ -7,6 +7,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+
 @SpringBootApplication
 public class DemoApplication {
 
@@ -19,7 +23,8 @@ public class DemoApplication {
         return args -> {
             repository.save(MessageTemplate.builder()
                     .name("template1")
-                    .substitutionValue("A-Team")
+                    .recipients(new ArrayList<>(Collections.singletonList(new URL("https://httpbin.org/#/"))))
+                    .substitutionValues(new ArrayList<>(Collections.singletonList("teamName")))
                     .build());
             repository.save(MessageTemplate.builder()
                     .name("template2")
