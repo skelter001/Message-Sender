@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Service
 public class MessageTemplateServiceImpl implements MessageTemplateService {
@@ -66,7 +66,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
         MessageTemplate updatedMessageTemplate = repository.findById(id)
                 .map(messageTemplate -> {
                     messageTemplate.setName(newMessageTemplate.getName());
-                    messageTemplate.setSubstitutionValue(newMessageTemplate.getSubstitutionValue());
+                    messageTemplate.setSubstitutionValues(newMessageTemplate.getSubstitutionValues());
                     messageTemplate.setRecipients(newMessageTemplate.getRecipients());
                     return repository.save(messageTemplate);
                 })

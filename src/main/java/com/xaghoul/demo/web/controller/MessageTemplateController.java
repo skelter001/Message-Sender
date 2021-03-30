@@ -7,9 +7,17 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
-import java.util.ArrayList;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -39,21 +47,21 @@ public class MessageTemplateController {
         return service.post(messageTemplate);
     }
 
-    @PostMapping("/send_message")
+    @PostMapping("/send_message/{templateName}")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<?> sendMessage(@RequestBody String templateName, ArrayList<String> vars) {
+    public ResponseEntity<?> sendMessage(@RequestBody Map<String, String> variables, @PathVariable String templateName) {
         MessageTemplate messageTemplate = service.getByName(templateName);
-        return new ResponseEntity<>(messageTemplate.createMessage(vars), HttpStatus.OK);
+        return new ResponseEntity<>(messageTemplate.createMessage(variables), HttpStatus.OK);
     }
 
     @PutMapping("/{templateId}")
-    public ResponseEntity<?> putMessageTemplate(@RequestBody MessageTemplate newMessageTemplate,
-                                                @PathVariable UUID templateId) {
+    public ResponseEntity<?> updateTemplate(@RequestBody MessageTemplate newMessageTemplate,
+                                            @PathVariable UUID templateId) {
         return service.put(newMessageTemplate, templateId);
     }
 
     @DeleteMapping("/{templateId}")
-    public ResponseEntity<?> delete(@PathVariable UUID templateId) {
+    public ResponseEntity<?> deleteTemplate(@PathVariable UUID templateId) {
         return service.delete(templateId);
     }
 }
