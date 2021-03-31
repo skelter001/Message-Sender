@@ -4,17 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
-import java.util.Map;
-
 @Value
 public class Message {
-    String templateName;
-    Map<String, String> variables;
+    String message;
 
     @JsonCreator
-    public Message(@JsonProperty String templateName,
-                   @JsonProperty Map<String, String> variables) {
-        this.templateName = templateName;
-        this.variables = variables;
+    public Message(@JsonProperty String message) {
+        this.message = message;
     }
 }

@@ -29,14 +29,16 @@ public class MessageTemplate {
                     strategy = GenerationType.IDENTITY)
     UUID id;
     String name;
-    @ElementCollection
-    @JsonDeserialize
-    List<String> substitutionValues = new ArrayList<>();
+    String template;
     @ElementCollection
     @JsonDeserialize
     List<URL> recipients = new ArrayList<>();
 
     public Message createMessage(Map<String, String> variables) {
-        return new Message(name, variables);
+        String msg = template;
+        for(Map.Entry<String, String> key : variables.entrySet()) {
+            msg = msg.replace(key.getKey(), key.getValue());
+        }
+        return new Message(msg);
     }
 }

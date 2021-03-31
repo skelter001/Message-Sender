@@ -24,7 +24,7 @@ public class DemoApplication {
             repository.save(MessageTemplate.builder()
                     .name("template1")
                     .recipients(new ArrayList<>(Collections.singletonList(new URL("https://httpbin.org/#/"))))
-                    .substitutionValues(new ArrayList<>(Collections.singletonList("teamName")))
+                    .template("teamName")
                     .build());
             repository.save(MessageTemplate.builder()
                     .name("template2")

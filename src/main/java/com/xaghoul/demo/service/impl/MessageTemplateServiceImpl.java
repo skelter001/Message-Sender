@@ -66,7 +66,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
         MessageTemplate updatedMessageTemplate = repository.findById(id)
                 .map(messageTemplate -> {
                     messageTemplate.setName(newMessageTemplate.getName());
-                    messageTemplate.setSubstitutionValues(newMessageTemplate.getSubstitutionValues());
+                    messageTemplate.setTemplate(newMessageTemplate.getTemplate());
                     messageTemplate.setRecipients(newMessageTemplate.getRecipients());
                     return repository.save(messageTemplate);
                 })
