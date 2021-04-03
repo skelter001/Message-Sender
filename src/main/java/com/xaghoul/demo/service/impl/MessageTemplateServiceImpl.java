@@ -1,6 +1,7 @@
 package com.xaghoul.demo.service.impl;
 
 import com.xaghoul.demo.exception.MessageTemplateNotFoundException;
+import com.xaghoul.demo.model.Message;
 import com.xaghoul.demo.model.MessageTemplate;
 import com.xaghoul.demo.repository.MessageTemplateRepository;
 import com.xaghoul.demo.service.MessageTemplateService;
@@ -9,17 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class MessageTemplateServiceImpl implements MessageTemplateService {
@@ -53,7 +58,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
     }
 
     @Override
-    public ResponseEntity<?> post(@RequestBody MessageTemplate newMessageTemplate) {
+    public ResponseEntity<?> postTemplate(MessageTemplate newMessageTemplate) {
         EntityModel<MessageTemplate> messageTemplateModel = assembler.toModel(repository.save(newMessageTemplate));
 
         return ResponseEntity
@@ -62,7 +67,21 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
     }
 
     @Override
-    public ResponseEntity<?> put(@RequestBody MessageTemplate newMessageTemplate, @PathVariable UUID id) {
+    public List<ResponseEntity<Object>> postMessage(Message message, MessageTemplate messageTemplate) {
+        List<URL> urls = messageTemplate.getRecipients();
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        return urls.stream()
+                .map(url -> restTemplate
+                        .postForEntity(url.toString(), new HttpEntity<>(message, headers) , Object.class))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public ResponseEntity<?> put(MessageTemplate newMessageTemplate, UUID id) {
         MessageTemplate updatedMessageTemplate = repository.findById(id)
                 .map(messageTemplate -> {
                     messageTemplate.setName(newMessageTemplate.getName());
@@ -83,7 +102,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
     }
 
     @Override
-    public ResponseEntity<?> delete(@PathVariable UUID id) {
+    public ResponseEntity<?> delete(UUID id) {
         repository.deleteById(id);
 
         return ResponseEntity.noContent().build();

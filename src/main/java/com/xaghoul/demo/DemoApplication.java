@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -23,8 +23,9 @@ public class DemoApplication {
         return args -> {
             repository.save(MessageTemplate.builder()
                     .name("template1")
-                    .recipients(new ArrayList<>(Collections.singletonList(new URL("https://httpbin.org/#/"))))
-                    .template("teamName")
+                    .recipients(new ArrayList<>(Arrays.asList(new URL("https://httpbin.org/post"),
+                            new URL("https://postman-echo.com/post\n"))))
+                    .template("Jetbrains Internship in teamName team.")
                     .build());
             repository.save(MessageTemplate.builder()
                     .name("template2")
