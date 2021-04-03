@@ -2,14 +2,17 @@ package com.xaghoul.demo.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
+@Data
+@NoArgsConstructor
 public class Message {
-    String message;
+
+    private String message;
 
     @JsonCreator
-    public Message(@JsonProperty String message) {
+    public Message(@JsonProperty("message") String message) {
         this.message = message;
     }
 }
