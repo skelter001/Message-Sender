@@ -67,7 +67,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
     }
 
     @Override
-    public List<ResponseEntity<Object>> postMessage(Message message, MessageTemplate messageTemplate) {
+    public List<ResponseEntity<Object>> postMessage(MessageTemplate messageTemplate, Message message) {
         List<URL> urls = messageTemplate.getRecipients();
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
