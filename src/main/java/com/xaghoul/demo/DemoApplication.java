@@ -8,8 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -30,7 +30,11 @@ public class DemoApplication {
             repository.save(MessageTemplate.builder()
                     .name("template2")
                     .build());
-
+            repository.save(MessageTemplate.builder()
+                    .name("$$$")
+                    .template("Today is $year$ year")
+                    .recipients(Collections.singletonList(new URL("https://httpbin.org/post")))
+                    .build());
         };
     }
 }
