@@ -22,7 +22,7 @@ public interface MessageTemplateService {
 
     ResponseEntity<?> delete(UUID id);
 
-    List<ResponseEntity<Object>> postMessage(Message message, MessageTemplate messageTemplate);
+    List<ResponseEntity<Object>> postMessage(MessageTemplate messageTemplate, Message message);
 
     MessageTemplate getByName(String name);
 }
