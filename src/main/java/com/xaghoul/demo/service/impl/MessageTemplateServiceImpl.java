@@ -1,7 +1,7 @@
 package com.xaghoul.demo.service.impl;
 
 import com.xaghoul.demo.exception.MessageTemplateNotFoundException;
-import com.xaghoul.demo.model.Message;
+import com.xaghoul.demo.model.DefaultMessage;
 import com.xaghoul.demo.model.MessageTemplate;
 import com.xaghoul.demo.repository.MessageTemplateRepository;
 import com.xaghoul.demo.service.MessageTemplateService;
@@ -67,7 +67,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
     }
 
     @Override
-    public List<ResponseEntity<Object>> postMessage(MessageTemplate messageTemplate, Message message) {
+    public List<ResponseEntity<Object>> postMessage(MessageTemplate messageTemplate, DefaultMessage defaultMessage) {
         List<URL> urls = messageTemplate.getRecipients();
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -76,12 +76,12 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
 
         return urls.stream()
                 .map(url -> restTemplate
-                        .postForEntity(url.toString(), new HttpEntity<>(message, headers) , Object.class))
+                        .postForEntity(url.toString(), new HttpEntity<>(defaultMessage, headers) , Object.class))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public ResponseEntity<?> put(MessageTemplate newMessageTemplate, UUID id) {
+    public ResponseEntity<?> putTemplate(MessageTemplate newMessageTemplate, UUID id) {
         MessageTemplate updatedMessageTemplate = repository.findById(id)
                 .map(messageTemplate -> {
                     messageTemplate.setName(newMessageTemplate.getName());
@@ -102,7 +102,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
     }
 
     @Override
-    public ResponseEntity<?> delete(UUID id) {
+    public ResponseEntity<?> deleteTemplate(UUID id) {
         repository.deleteById(id);
 
         return ResponseEntity.noContent().build();

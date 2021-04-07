@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class Message {
+public class DefaultMessage {
 
-    private String message;
+    protected String message;
 
     @JsonCreator
-    public Message(@JsonProperty("message") String message) {
+    public DefaultMessage(@JsonProperty("message") String message) {
         this.message = message;
     }
 }

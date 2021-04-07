@@ -1,7 +1,7 @@
 package com.xaghoul.demo.service;
 
 
-import com.xaghoul.demo.model.Message;
+import com.xaghoul.demo.model.DefaultMessage;
 import com.xaghoul.demo.model.MessageTemplate;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -18,11 +18,11 @@ public interface MessageTemplateService {
 
     EntityModel<MessageTemplate> getById(UUID id);
 
-    ResponseEntity<?> put(MessageTemplate newMessageTemplate, UUID id);
+    ResponseEntity<?> putTemplate(MessageTemplate newMessageTemplate, UUID id);
 
-    ResponseEntity<?> delete(UUID id);
+    ResponseEntity<?> deleteTemplate(UUID id);
 
-    List<ResponseEntity<Object>> postMessage(MessageTemplate messageTemplate, Message message);
+    List<ResponseEntity<Object>> postMessage(MessageTemplate messageTemplate, DefaultMessage defaultMessage);
 
     MessageTemplate getByName(String name);
 }

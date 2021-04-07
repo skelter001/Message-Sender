@@ -36,11 +36,11 @@ public class MessageTemplate {
     private List<URL> recipients = new ArrayList<>();
 
     // TODO: 4/1/2021 change to SpEL
-    public Message createMessage(Map<String, String> variables) {
+    public String createMessage(Map<String, String> variables) {
         String msg = template;
         for(Map.Entry<String, String> key : variables.entrySet()) {
             msg = msg.replace(key.getKey(), key.getValue());
         }
-        return new Message(msg);
+        return msg;
     }
 }

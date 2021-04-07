@@ -23,9 +23,10 @@ public class DemoApplication {
         return args -> {
             repository.save(MessageTemplate.builder()
                     .name("template1")
-                    .recipients(new ArrayList<>(Arrays.asList(new URL("https://httpbin.org/post"),
-                            new URL("https://postman-echo.com/post\n"))))
-                    .template("Jetbrains Internship in teamName team.")
+                    .recipients(Arrays.asList(new URL("https://httpbin.org/post"),
+                            new URL("https://postman-echo.com/post")))
+                    .template("Jetbrains Internship in teamName team for termLong term.")
+                    //.substitutionWords(new HashMap<>())
                     .build());
             repository.save(MessageTemplate.builder()
                     .name("template2")
