@@ -5,8 +5,6 @@ import com.xaghoul.demo.model.MessageTemplate;
 import com.xaghoul.demo.model.ScheduledMessage;
 import lombok.AllArgsConstructor;
 
-import java.util.UUID;
-
 @AllArgsConstructor
 public class ScheduledMessageFactory implements MessageAbstractFactory {
 

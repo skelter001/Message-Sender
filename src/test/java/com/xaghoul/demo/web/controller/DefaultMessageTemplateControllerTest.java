@@ -1,8 +1,8 @@
 package com.xaghoul.demo.web.controller;
 
 import com.xaghoul.demo.model.MessageTemplate;
-import com.xaghoul.demo.service.impl.MessageTemplateScheduledServiceImpl;
 import com.xaghoul.demo.service.impl.MessageTemplateServiceImpl;
+import com.xaghoul.demo.service.impl.ScheduledMessageService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -19,7 +19,7 @@ import java.util.UUID;
 class DefaultMessageTemplateControllerTest {
 
     private final MessageTemplateServiceImpl messageTemplateService = Mockito.mock(MessageTemplateServiceImpl.class);
-    private final MessageTemplateScheduledServiceImpl messageScheduledService = Mockito.mock(MessageTemplateScheduledServiceImpl.class);
+    private final ScheduledMessageService messageScheduledService = Mockito.mock(ScheduledMessageService.class);
 
     @Test
     void whenSaveTemplate_getByIdValid() throws MalformedURLException {
