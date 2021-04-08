@@ -31,7 +31,10 @@ public class MessageTemplateScheduledServiceImpl implements MessageTemplateSched
     private final ScheduledMessageRepository repository;
 
     @Override
-    public List<ResponseEntity<Object>> postMessage(MessageTemplate messageTemplate, ScheduledMessage message) {
+    public List<ResponseEntity<Object>> postMessage(ScheduledMessage message) {
+        if (CronExpression.isValidExpression(message.getCronExpression()))
+            throw new InvalidCronExpressionException(message.getCronExpression());
+
         repository.save(message);
         scheduler.schedule((Runnable) sendMessage(messageTemplate, message),
                 new CronTrigger(message.getCronExpression()));

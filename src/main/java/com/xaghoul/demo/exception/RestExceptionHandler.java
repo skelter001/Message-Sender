@@ -15,7 +15,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseBody
     @ExceptionHandler({MessageTemplateNotFoundException.class})
     public ResponseEntity<Object> handleNotFound(MessageTemplateNotFoundException ex, WebRequest request) {
-        return handleExceptionInternal(ex, "Message template not found",
+        return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler({InvalidCronExpressionException.class})
+    public ResponseEntity<Object> handleWrongExpression(InvalidCronExpressionException ex, WebRequest request) {
+        return handleExceptionInternal(ex, ex.getMessage(),
+                new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
     }
 }
