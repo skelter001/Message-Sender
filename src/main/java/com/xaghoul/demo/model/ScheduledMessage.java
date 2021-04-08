@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.scheduling.support.CronTrigger;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

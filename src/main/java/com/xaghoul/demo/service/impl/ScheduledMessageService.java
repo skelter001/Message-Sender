@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class MessageTemplateScheduledServiceImpl implements MessageTemplateScheduledService {
+public class ScheduledMessageService implements MessageTemplateScheduledService {
 
     private final TaskScheduler scheduler;
     private final ScheduledMessageRepository repository;
@@ -36,9 +36,11 @@ public class MessageTemplateScheduledServiceImpl implements MessageTemplateSched
             throw new InvalidCronExpressionException(message.getCronExpression());
 
         repository.save(message);
-        scheduler.schedule((Runnable) sendMessage(messageTemplate, message),
+
+        scheduler.schedule(() -> sendMessage(message),
                 new CronTrigger(message.getCronExpression()));
-        return sendMessage(messageTemplate, message);
+
+        return sendMessage(message);
     }
 
     public List<ResponseEntity<Object>> sendMessage(MessageTemplate messageTemplate, ScheduledMessage message) {
@@ -50,7 +52,7 @@ public class MessageTemplateScheduledServiceImpl implements MessageTemplateSched
 
         return urls.stream()
                 .map(url -> restTemplate
-                        .postForEntity(url.toString(), new HttpEntity<>(message, headers) , Object.class))
+                        .postForEntity(url.toString(), new HttpEntity<>(message, headers), Object.class))
                 .collect(Collectors.toList());
     }
 
