@@ -1,8 +1,8 @@
 package com.xaghoul.demo.web.controller;
 
 import com.xaghoul.demo.model.MessageTemplate;
-import com.xaghoul.demo.service.impl.MessageTemplateServiceImpl;
 import com.xaghoul.demo.service.impl.ScheduledMessageService;
+import com.xaghoul.demo.service.impl.MessageTemplateServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
