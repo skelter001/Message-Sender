@@ -55,20 +55,22 @@ public class MessageTemplateController {
     // TODO: 4/3/2021 ResponseEntity<Message> returning incorrect value
     @PostMapping(value = "/send_message/{templateName}")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<ResponseEntity<Object>> sendMessage(@RequestParam(required = false) String sendType,
-                                                    @RequestBody Map<String, String> variables,
+    public List<ResponseEntity<Object>> sendMessage(@RequestParam(value = "sendType",  required = false)
+                                                                String sendType,
+                                                    @RequestBody MessageRequestBody requestBody,
                                                     @PathVariable String templateName) {
         MessageTemplate template = defaultService.getByName(templateName);
         DefaultMessage message;
-        if(sendType.equals("scheduled") && variables.containsKey("cronExpression")) {
+        if(sendType != null && sendType.equals("scheduled") &&
+                requestBody.getCronExpression() != null) {
             message = MessageFactory.getMessage(
-                    new ScheduledMessageFactory(template.createMessage(variables),
-                            variables.get("cronExpression"), template));
-            return scheduledService.postMessage(template, (ScheduledMessage) message);
+                    new ScheduledMessageFactory(template.createMessage(requestBody.getVariables()),
+                            requestBody.getCronExpression(), template));
+            return scheduledService.postMessage((ScheduledMessage) message);
         }
         else {
             message = MessageFactory.getMessage(
-                    new DefaultMessageFactory(template.createMessage(variables)));
+                    new DefaultMessageFactory(template.createMessage(requestBody.getVariables())));
             return defaultService.postMessage(template, message);
         }
     }
