@@ -52,7 +52,7 @@ class DefaultMessageTemplateControllerTest {
 
         Mockito.when(messageTemplateService.getAll()).thenReturn(expected);
 
-        CollectionModel<EntityModel<MessageTemplate>> actual = controller.getAll();
+        CollectionModel<EntityModel<MessageTemplate>> actual = controller.getAllTemplates();
 
         Assertions.assertEquals(expected, actual);
     }

@@ -17,6 +17,6 @@ public class MessageTemplateModelAssembler implements
     public EntityModel<MessageTemplate> toModel(MessageTemplate messageTemplateEntity) {
         return EntityModel.of(messageTemplateEntity,
                 linkTo(methodOn(MessageTemplateController.class).getById(messageTemplateEntity.getId())).withSelfRel(),
-                linkTo(methodOn(MessageTemplateController.class).getAll()).withRel("templates"));
+                linkTo(methodOn(MessageTemplateController.class).getAllTemplates()).withRel("templates"));
     }
 }

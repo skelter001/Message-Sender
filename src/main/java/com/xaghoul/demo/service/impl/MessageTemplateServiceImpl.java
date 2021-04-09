@@ -3,6 +3,7 @@ package com.xaghoul.demo.service.impl;
 import com.xaghoul.demo.exception.MessageTemplateNotFoundException;
 import com.xaghoul.demo.model.DefaultMessage;
 import com.xaghoul.demo.model.MessageTemplate;
+import com.xaghoul.demo.model.ScheduledMessage;
 import com.xaghoul.demo.repository.MessageTemplateRepository;
 import com.xaghoul.demo.service.MessageTemplateService;
 import com.xaghoul.demo.web.controller.MessageTemplateController;
@@ -46,7 +47,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
                 .collect(Collectors.toList());
 
         return CollectionModel.of(templates,
-                linkTo(methodOn(MessageTemplateController.class).getAll()).withSelfRel());
+                linkTo(methodOn(MessageTemplateController.class).getAllTemplates()).withSelfRel());
     }
 
     @Override
@@ -67,7 +68,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
     }
 
     @Override
-    public List<ResponseEntity<Object>> postMessage(MessageTemplate messageTemplate, DefaultMessage defaultMessage) {
+    public List<ScheduledMessage> postMessage(MessageTemplate messageTemplate, DefaultMessage defaultMessage) {
         List<URL> urls = messageTemplate.getRecipients();
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -76,7 +77,7 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
 
         return urls.stream()
                 .map(url -> restTemplate
-                        .postForEntity(url.toString(), new HttpEntity<>(defaultMessage, headers) , Object.class))
+                        .postForObject(url.toString(), new HttpEntity<>(defaultMessage, headers) , ScheduledMessage.class))
                 .collect(Collectors.toList());
     }
 

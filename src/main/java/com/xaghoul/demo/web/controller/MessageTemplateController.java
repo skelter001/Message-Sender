@@ -42,7 +42,7 @@ public class MessageTemplateController {
     }
 
     @GetMapping({"/", ""})
-    public CollectionModel<EntityModel<MessageTemplate>> getAll() {
+    public CollectionModel<EntityModel<MessageTemplate>> getAllTemplates() {
         return defaultService.getAll();
     }
 
