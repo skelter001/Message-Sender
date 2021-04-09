@@ -5,8 +5,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.MappedSuperclass;
+
 @Data
 @NoArgsConstructor
+@MappedSuperclass
 public class DefaultMessage {
 
     protected String message;

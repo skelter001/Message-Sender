@@ -62,7 +62,8 @@ public class ScheduledMessageService implements MessageTemplateScheduledService 
     }
 
     public boolean stopSendingMessage(UUID messageId) {
-        ScheduledMessage message = repository.getOne(messageId);
+        ScheduledMessage message = repository.findById(messageId)
+                .orElseThrow(() -> new MessageNotFoundException(messageId));
         log.info("Message {} sending was stopped", message.getMessage());
         return Objects.requireNonNull(scheduler.schedule(() -> sendMessage(message),
                 new CronTrigger(message.getCronExpression()))).cancel(true);

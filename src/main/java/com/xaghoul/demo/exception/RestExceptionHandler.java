@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ResponseBody
-    @ExceptionHandler({MessageTemplateNotFoundException.class})
+    @ExceptionHandler({MessageTemplateNotFoundException.class, MessageNotFoundException.class})
     public ResponseEntity<Object> handleNotFound(MessageTemplateNotFoundException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
