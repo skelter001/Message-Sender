@@ -1,5 +1,7 @@
 package com.xaghoul.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +36,15 @@ public class MessageTemplate {
     @JsonDeserialize
     @Builder.Default
     private List<URL> recipients = new ArrayList<>();
+
+    @JsonCreator
+    public MessageTemplate(@JsonProperty("name") String name,
+                           @JsonProperty("template") String template,
+                           @JsonProperty("recipients") List<URL> recipients) {
+        this.name = name;
+        this.template = template;
+        this.recipients = recipients;
+    }
 
     // TODO: 4/1/2021 change to SpEL
     public String createMessage(Map<String, String> variables) {
