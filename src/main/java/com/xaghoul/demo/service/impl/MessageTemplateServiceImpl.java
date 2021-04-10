@@ -7,6 +7,7 @@ import com.xaghoul.demo.model.ScheduledMessage;
 import com.xaghoul.demo.repository.MessageTemplateRepository;
 import com.xaghoul.demo.service.MessageTemplateService;
 import com.xaghoul.demo.web.controller.MessageTemplateController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -28,6 +29,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
+@Slf4j
 public class MessageTemplateServiceImpl implements MessageTemplateService {
 
     private final MessageTemplateRepository repository;
@@ -74,6 +76,8 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        log.info("Message {} is sending to {} recipients", defaultMessage.getMessage(), urls.toString());
 
         return urls.stream()
                 .map(url -> restTemplate

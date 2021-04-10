@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 
+//  "cronExpression": "*/10 * * ? * *"
 @SpringBootApplication
 public class DemoApplication {
 
@@ -25,7 +26,7 @@ public class DemoApplication {
                     .name("template1")
                     .recipients(Arrays.asList(new URL("https://httpbin.org/post"),
                             new URL("https://postman-echo.com/post")))
-                    .template("Jetbrains Internship in teamName team for termLong term.")
+                    .template("Jetbrains Internship in $teamName$ team for termLong term.")
                     //.substitutionWords(new HashMap<>())
                     .build());
             repository.save(MessageTemplate.builder()
