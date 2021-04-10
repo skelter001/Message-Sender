@@ -80,7 +80,7 @@ public class MessageTemplateController {
         if (scheduledService.stopSendingMessage(messageId))
             return HttpStatus.ACCEPTED;
         else
-            return HttpStatus.NO_CONTENT;
+            return HttpStatus.NOT_FOUND;
     }
 
     @PutMapping("/{templateId}")
