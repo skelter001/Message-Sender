@@ -5,7 +5,7 @@ import com.xaghoul.demo.exception.MessageNotFoundException;
 import com.xaghoul.demo.model.MessageTemplate;
 import com.xaghoul.demo.model.ScheduledMessage;
 import com.xaghoul.demo.repository.ScheduledMessageRepository;
-import com.xaghoul.demo.service.MessageTemplateScheduledService;
+import com.xaghoul.demo.service.ScheduledMessageService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -27,10 +27,11 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class ScheduledMessageService implements MessageTemplateScheduledService {
+public class ScheduledMessageServiceImpl implements ScheduledMessageService {
 
     private final TaskScheduler scheduler;
     private final ScheduledMessageRepository repository;
+    private final RestTemplate restTemplate;
     private final Map<UUID, ScheduledFuture<?>> scheduledTasks = new HashMap<>();
 
     @Override
@@ -56,7 +57,6 @@ public class ScheduledMessageService implements MessageTemplateScheduledService 
     public List<ScheduledMessage> sendMessage(ScheduledMessage message) {
         MessageTemplate messageTemplate = message.getTemplate();
         List<URL> urls = messageTemplate.getRecipients();
-        RestTemplate restTemplate = new RestTemplate();
 
         log.info("Message {} is sending to {} recipients", message.getMessage(), message.getTemplate().getRecipients());
         try {

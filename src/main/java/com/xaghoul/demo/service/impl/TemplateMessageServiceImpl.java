@@ -1,26 +1,17 @@
 package com.xaghoul.demo.service.impl;
 
 import com.xaghoul.demo.exception.MessageTemplateNotFoundException;
-import com.xaghoul.demo.model.DefaultMessage;
 import com.xaghoul.demo.model.MessageTemplate;
-import com.xaghoul.demo.model.ScheduledMessage;
 import com.xaghoul.demo.repository.MessageTemplateRepository;
-import com.xaghoul.demo.service.MessageTemplateService;
+import com.xaghoul.demo.service.TemplateMessageService;
 import com.xaghoul.demo.web.controller.MessageTemplateController;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,14 +20,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
-@Slf4j
-public class MessageTemplateServiceImpl implements MessageTemplateService {
+public class TemplateMessageServiceImpl implements TemplateMessageService {
 
     private final MessageTemplateRepository repository;
     private final MessageTemplateModelAssembler assembler;
 
     @Autowired
-    public MessageTemplateServiceImpl(MessageTemplateRepository repository, MessageTemplateModelAssembler assembler) {
+    public TemplateMessageServiceImpl(MessageTemplateRepository repository, MessageTemplateModelAssembler assembler) {
         this.repository = repository;
         this.assembler = assembler;
     }
@@ -67,22 +57,6 @@ public class MessageTemplateServiceImpl implements MessageTemplateService {
         return ResponseEntity
                 .created(messageTemplateModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
                 .body(messageTemplateModel);
-    }
-
-    @Override
-    public List<ScheduledMessage> postMessage(MessageTemplate messageTemplate, DefaultMessage defaultMessage) {
-        List<URL> urls = messageTemplate.getRecipients();
-        RestTemplate restTemplate = new RestTemplate();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-
-        log.info("Message {} is sending to {} recipients", defaultMessage.getMessage(), urls.toString());
-
-        return urls.stream()
-                .map(url -> restTemplate
-                        .postForObject(url.toString(), new HttpEntity<>(defaultMessage, headers) , ScheduledMessage.class))
-                .collect(Collectors.toList());
     }
 
     @Override
