@@ -46,11 +46,10 @@ public class MessageTemplate {
         this.recipients = recipients;
     }
 
-    // TODO: 4/1/2021 change to SpEL
     public String createMessage(Map<String, String> variables) {
         String msg = template;
         for(Map.Entry<String, String> key : variables.entrySet()) {
-            msg = msg.replace(key.getKey(), key.getValue());
+            msg = msg.replaceAll("\\$" + key.getKey() + "\\$", key.getValue());
         }
         return msg;
     }
