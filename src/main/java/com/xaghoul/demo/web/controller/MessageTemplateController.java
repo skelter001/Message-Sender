@@ -7,8 +7,9 @@ import com.xaghoul.demo.model.DefaultMessage;
 import com.xaghoul.demo.model.MessageRequestBody;
 import com.xaghoul.demo.model.MessageTemplate;
 import com.xaghoul.demo.model.ScheduledMessage;
-import com.xaghoul.demo.service.impl.MessageTemplateServiceImpl;
-import com.xaghoul.demo.service.impl.ScheduledMessageService;
+import com.xaghoul.demo.service.impl.DefaultMessageServiceImpl;
+import com.xaghoul.demo.service.impl.TemplateMessageServiceImpl;
+import com.xaghoul.demo.service.impl.ScheduledMessageServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -33,51 +34,57 @@ import java.util.UUID;
 @AllArgsConstructor
 public class MessageTemplateController {
 
-    private final MessageTemplateServiceImpl defaultService;
-    private final ScheduledMessageService scheduledService;
+    private final TemplateMessageServiceImpl templateService;
+    private final ScheduledMessageServiceImpl scheduledMessageService;
+    private final DefaultMessageServiceImpl defaultMessageService;
 
     @GetMapping("/{templateId}")
     public EntityModel<MessageTemplate> getById(@PathVariable UUID templateId) {
-        return defaultService.getById(templateId);
+        return templateService.getById(templateId);
     }
 
     @GetMapping({"/", ""})
     public CollectionModel<EntityModel<MessageTemplate>> getAllTemplates() {
-        return defaultService.getAll();
+        return templateService.getAll();
+    }
+
+    @GetMapping({"/messages", "/messages/"})
+    public List<ScheduledMessage> getAllMessages() {
+        return scheduledMessageService.getAll();
     }
 
     @PostMapping("/add_template")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> addTemplate(@RequestBody MessageTemplate messageTemplate) {
-        return defaultService.postTemplate(messageTemplate);
+        return templateService.postTemplate(messageTemplate);
     }
 
-    // TODO: 4/3/2021 ResponseEntity<Message> returning incorrect value
+    // TODO: 4/9/2021 return Message instance
     @PostMapping(value = "/send_message/{templateName}")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<ResponseEntity<Object>> sendMessage(@RequestParam(value = "sendType",  required = false)
+    public List<ScheduledMessage> sendMessage(@RequestParam(value = "sendType",  required = false)
                                                                 String sendType,
                                                     @RequestBody MessageRequestBody requestBody,
                                                     @PathVariable String templateName) {
-        MessageTemplate template = defaultService.getByName(templateName);
+        MessageTemplate template = templateService.getByName(templateName);
         DefaultMessage message;
         if(sendType != null && sendType.equals("scheduled") &&
                 requestBody.getCronExpression() != null) {
             message = MessageFactory.getMessage(
                     new ScheduledMessageFactory(template.createMessage(requestBody.getVariables()),
                             requestBody.getCronExpression(), template));
-            return scheduledService.postMessage((ScheduledMessage) message);
+            return scheduledMessageService.postMessage((ScheduledMessage) message);
         }
         else {
             message = MessageFactory.getMessage(
                     new DefaultMessageFactory(template.createMessage(requestBody.getVariables())));
-            return defaultService.postMessage(template, message);
+            return defaultMessageService.postMessage(template, message);
         }
     }
 
     @PostMapping("/send_message/cancel/{messageId}")
     public HttpStatus cancelSendingMessage(@PathVariable UUID messageId) {
-        if (scheduledService.stopSendingMessage(messageId))
+        if (scheduledMessageService.stopSendingMessage(messageId))
             return HttpStatus.ACCEPTED;
         else
             return HttpStatus.NOT_FOUND;
@@ -86,11 +93,11 @@ public class MessageTemplateController {
     @PutMapping("/{templateId}")
     public ResponseEntity<?> updateTemplate(@RequestBody MessageTemplate newMessageTemplate,
                                             @PathVariable UUID templateId) {
-        return defaultService.putTemplate(newMessageTemplate, templateId);
+        return templateService.putTemplate(newMessageTemplate, templateId);
     }
 
     @DeleteMapping("/{templateId}")
     public ResponseEntity<?> deleteTemplate(@PathVariable UUID templateId) {
-        return defaultService.deleteTemplate(templateId);
+        return templateService.deleteTemplate(templateId);
     }
 }

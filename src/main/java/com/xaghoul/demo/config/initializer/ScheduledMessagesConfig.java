@@ -2,7 +2,7 @@ package com.xaghoul.demo.config.initializer;
 
 import com.xaghoul.demo.model.ScheduledMessage;
 import com.xaghoul.demo.repository.ScheduledMessageRepository;
-import com.xaghoul.demo.service.impl.ScheduledMessageService;
+import com.xaghoul.demo.service.impl.ScheduledMessageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,10 +13,10 @@ import java.util.List;
 public class ScheduledMessagesConfig {
 
     private final ScheduledMessageRepository repository;
-    private final ScheduledMessageService service;
+    private final ScheduledMessageServiceImpl service;
 
     @Autowired
-    public ScheduledMessagesConfig(ScheduledMessageRepository repository, ScheduledMessageService service) {
+    public ScheduledMessagesConfig(ScheduledMessageRepository repository, ScheduledMessageServiceImpl service) {
         this.repository = repository;
         this.service = service;
     }
