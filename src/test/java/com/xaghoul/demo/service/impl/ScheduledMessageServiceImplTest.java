@@ -1,6 +1,5 @@
 package com.xaghoul.demo.service.impl;
 
-import ch.qos.logback.core.util.TimeUtil;
 import com.xaghoul.demo.model.MessageTemplate;
 import com.xaghoul.demo.model.ScheduledMessage;
 import com.xaghoul.demo.repository.ScheduledMessageRepository;
@@ -8,31 +7,21 @@ import com.xaghoul.demo.web.controller.MessageTemplateController;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.scheduling.TaskScheduler;
-import org.springframework.scheduling.support.CronTrigger;
-import org.springframework.web.client.RestTemplate;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.Duration;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -85,16 +74,19 @@ class ScheduledMessageServiceImplTest {
                 .add(linkTo(methodOn(MessageTemplateController.class).getAllMessages()).withSelfRel());
 
         Assertions.assertEquals(expected, scheduledMessageService.getAll());
+
+        scheduledMessageService.stopSendingMessage(msg1.getId());
+        scheduledMessageService.stopSendingMessage(msg2.getId());
     }
 
-/*    @Test
+    @Test
     void postMessageTest() throws MalformedURLException, InterruptedException {
         MessageTemplate template1 = new MessageTemplate(
                 UUID.randomUUID(), "template1", "Template $test$ message",
                 Arrays.asList(new URL("https://httpbin.org/post"),
                         new URL("https://postman-echo.com/post")));
 
-        String cronExpression_everyTwoSeconds = "* * * ? * *";
+        String cronExpression_everyTwoSeconds = "* * * * * *";
         Map<String, String> variables = Map.of("test", "123");
         ScheduledMessage msg1 = new ScheduledMessage(UUID.randomUUID(),
                 cronExpression_everyTwoSeconds, template1);
@@ -109,9 +101,9 @@ class ScheduledMessageServiceImplTest {
 
         Thread.sleep(1000);
 
-        Mockito.verify(messageSender, Mockito.times(2))
+        Mockito.verify(messageSender, Mockito.times(3))
                 .sendMessage(ArgumentMatchers.eq(msg1));
-    }*/
+    }
 
     @Test
     void stopSendingMessageTest() throws MalformedURLException {
@@ -120,7 +112,7 @@ class ScheduledMessageServiceImplTest {
                 Arrays.asList(new URL("https://httpbin.org/post"),
                         new URL("https://postman-echo.com/post")));
 
-        String cronExpression_everyTwoSeconds = "* * * ? * *";
+        String cronExpression_everyTwoSeconds = "* * * * * *";
         Map<String, String> variables = Map.of("test", "123");
         ScheduledMessage msg1 = new ScheduledMessage(UUID.randomUUID(),
                 cronExpression_everyTwoSeconds, template1);

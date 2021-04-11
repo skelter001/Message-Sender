@@ -79,7 +79,7 @@ public class MessageTemplateController {
         }
     }
 
-    @PostMapping("/send_message/cancel/{messageId}")
+    @DeleteMapping("/send_message/cancel/{messageId}")
     public HttpStatus cancelSendingMessage(@PathVariable UUID messageId) {
         if (scheduledMessageService.stopSendingMessage(messageId))
             return HttpStatus.ACCEPTED;
