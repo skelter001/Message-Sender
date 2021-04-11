@@ -7,9 +7,9 @@ import com.xaghoul.demo.model.DefaultMessage;
 import com.xaghoul.demo.model.MessageRequestBody;
 import com.xaghoul.demo.model.MessageTemplate;
 import com.xaghoul.demo.model.ScheduledMessage;
-import com.xaghoul.demo.service.impl.DefaultMessageServiceImpl;
-import com.xaghoul.demo.service.impl.ScheduledMessageServiceImpl;
-import com.xaghoul.demo.service.impl.TemplateMessageServiceImpl;
+import com.xaghoul.demo.service.DefaultMessageService;
+import com.xaghoul.demo.service.ScheduledMessageService;
+import com.xaghoul.demo.service.TemplateMessageService;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -33,9 +33,9 @@ import java.util.UUID;
 @AllArgsConstructor
 public class MessageTemplateController {
 
-    private final TemplateMessageServiceImpl templateService;
-    private final ScheduledMessageServiceImpl scheduledMessageService;
-    private final DefaultMessageServiceImpl defaultMessageService;
+    private final TemplateMessageService templateService;
+    private final ScheduledMessageService scheduledMessageService;
+    private final DefaultMessageService defaultMessageService;
 
     @GetMapping("/{templateId}")
     public EntityModel<MessageTemplate> getById(@PathVariable UUID templateId) {

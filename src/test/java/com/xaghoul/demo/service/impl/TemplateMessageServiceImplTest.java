@@ -33,11 +33,9 @@ class TemplateMessageServiceImplTest {
     @Autowired
     private TemplateMessageServiceImpl templateMessageService;
 
-    @Autowired
     @MockBean
     private MessageTemplateRepository repository;
 
-    @Autowired
     @MockBean
     private MessageTemplateModelAssembler assembler;
 

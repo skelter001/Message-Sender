@@ -40,13 +40,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 class ScheduledMessageServiceImplTest {
     @Autowired
     private ScheduledMessageServiceImpl scheduledMessageService;
-    @Autowired
     @MockBean
     private ScheduledMessageRepository repository;
-    @Autowired
     @MockBean
     private ScheduledMessageModelAssembler assembler;
-    @Autowired
     @MockBean
     private ScheduledMessageSender messageSender;
 
@@ -58,13 +55,13 @@ class ScheduledMessageServiceImplTest {
                 Arrays.asList(new URL("https://httpbin.org/post"),
                         new URL("https://postman-echo.com/post")));
 
-        String cronExpression_everyTenMinutes = "0 */10 * * * *";
+        String cronExpression_everyTenMinutes = "0 */10 * ? * *";
         Map<String, String> variables = Map.of("test", "123");
         ScheduledMessage msg1 = new ScheduledMessage(UUID.randomUUID(),
                 cronExpression_everyTenMinutes, template1);
         msg1.setMessage(template1.createMessage(variables));
 
-        String cronExpression_everyMinute = "0 * * * * *";
+        String cronExpression_everyMinute = "0 * * ? * *";
         ScheduledMessage msg2 = new ScheduledMessage(UUID.randomUUID(),
                 cronExpression_everyMinute, template1);
         msg2.setMessage(template1.createMessage(variables));
