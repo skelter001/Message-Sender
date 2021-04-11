@@ -8,8 +8,8 @@ import com.xaghoul.demo.model.MessageRequestBody;
 import com.xaghoul.demo.model.MessageTemplate;
 import com.xaghoul.demo.model.ScheduledMessage;
 import com.xaghoul.demo.service.impl.DefaultMessageServiceImpl;
-import com.xaghoul.demo.service.impl.TemplateMessageServiceImpl;
 import com.xaghoul.demo.service.impl.ScheduledMessageServiceImpl;
+import com.xaghoul.demo.service.impl.TemplateMessageServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -49,7 +48,7 @@ public class MessageTemplateController {
     }
 
     @GetMapping({"/messages", "/messages/"})
-    public List<ScheduledMessage> getAllMessages() {
+    public CollectionModel<EntityModel<ScheduledMessage>> getAllMessages() {
         return scheduledMessageService.getAll();
     }
 
@@ -59,26 +58,24 @@ public class MessageTemplateController {
         return templateService.postTemplate(messageTemplate);
     }
 
-    // TODO: 4/9/2021 return Message instance
     @PostMapping(value = "/send_message/{templateName}")
     @ResponseStatus(HttpStatus.CREATED)
-    public List<ScheduledMessage> sendMessage(@RequestParam(value = "sendType",  required = false)
-                                                                String sendType,
-                                                    @RequestBody MessageRequestBody requestBody,
-                                                    @PathVariable String templateName) {
+    public void sendMessage(@RequestParam(value = "sendType", required = false)
+                                    String sendType,
+                            @RequestBody MessageRequestBody requestBody,
+                            @PathVariable String templateName) {
         MessageTemplate template = templateService.getByName(templateName);
         DefaultMessage message;
-        if(sendType != null && sendType.equals("scheduled") &&
+        if (sendType != null && sendType.equals("scheduled") &&
                 requestBody.getCronExpression() != null) {
             message = MessageFactory.getMessage(
                     new ScheduledMessageFactory(template.createMessage(requestBody.getVariables()),
                             requestBody.getCronExpression(), template));
-            return scheduledMessageService.postMessage((ScheduledMessage) message);
-        }
-        else {
+            scheduledMessageService.postMessage((ScheduledMessage) message);
+        } else {
             message = MessageFactory.getMessage(
                     new DefaultMessageFactory(template.createMessage(requestBody.getVariables())));
-            return defaultMessageService.postMessage(template, message);
+            defaultMessageService.postMessage(template, message);
         }
     }
 

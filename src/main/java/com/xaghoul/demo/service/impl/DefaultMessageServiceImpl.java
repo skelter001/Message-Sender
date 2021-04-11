@@ -25,7 +25,7 @@ public class DefaultMessageServiceImpl implements DefaultMessageService {
     private final RestTemplate restTemplate;
 
     @Override
-    public List<ScheduledMessage> postMessage(MessageTemplate messageTemplate, DefaultMessage defaultMessage) {
+    public void postMessage(MessageTemplate messageTemplate, DefaultMessage defaultMessage) {
         List<URL> urls = messageTemplate.getRecipients();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -33,7 +33,7 @@ public class DefaultMessageServiceImpl implements DefaultMessageService {
 
         log.info("Message {} is sending to {} recipients", defaultMessage.getMessage(), urls.toString());
 
-        return urls.stream()
+        urls.stream()
                 .map(url -> restTemplate
                         .postForObject(url.toString(), new HttpEntity<>(defaultMessage, headers) , ScheduledMessage.class))
                 .collect(Collectors.toList());
