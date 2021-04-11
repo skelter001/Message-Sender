@@ -10,12 +10,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -33,9 +33,11 @@ public class DefaultMessageServiceImpl implements DefaultMessageService {
 
         log.info("Message {} is sending to {} recipients", defaultMessage.getMessage(), urls.toString());
 
-        urls.stream()
-                .map(url -> restTemplate
-                        .postForObject(url.toString(), new HttpEntity<>(defaultMessage, headers) , ScheduledMessage.class))
-                .collect(Collectors.toList());
+        try {
+            urls.forEach(url -> restTemplate
+                    .postForObject(url.toString(), new HttpEntity<>(defaultMessage, headers), ScheduledMessage.class));
+        } catch (HttpStatusCodeException sce) {
+            log.debug(sce.getResponseBodyAsString());
+        }
     }
 }

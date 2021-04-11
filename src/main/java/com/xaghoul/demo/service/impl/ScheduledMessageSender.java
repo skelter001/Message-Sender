@@ -7,11 +7,14 @@ import com.xaghoul.demo.repository.ScheduledMessageRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -28,12 +31,16 @@ public class ScheduledMessageSender {
         MessageTemplate messageTemplate = message.getTemplate();
         List<URL> urls = messageTemplate.getRecipients();
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
         log.info("Message {} is sending to {} recipients", message.getMessage(), message.getTemplate().getRecipients());
         try {
             urls.forEach(url -> restTemplate
-                    .postForObject(url.toString(), new HttpEntity<>(message), ScheduledMessage.class));
-        } catch (HttpStatusCodeException se) {
-            log.debug(se.getResponseBodyAsString());
+                    .postForObject(url.toString(), new HttpEntity<>(message, headers), ScheduledMessage.class));
+        } catch (HttpStatusCodeException sce) {
+            log.debug(sce.getResponseBodyAsString());
         }
     }
 
