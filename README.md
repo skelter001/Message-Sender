@@ -2,7 +2,7 @@
 
 ## Stack 
 
-- Java 15
+- Java 11
 - Gradle
 - H2DB
 - Spring Boot & Spring JPA
